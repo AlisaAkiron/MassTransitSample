@@ -7,7 +7,6 @@
     <LangVersion>12</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <NoWarn>CA1305</NoWarn>
-    <RootNamespace>Hibit.Marketing</RootNamespace>
 
     <!-- https://github.com/dorny/test-reporter-->
     <VSTestLogger>trx%3bLogFileName=$(MSBuildProjectName).trx</VSTestLogger>
