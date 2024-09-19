@@ -21,11 +21,14 @@ builder.Services.AddMassTransit(options =>
         o.UseBusOutbox();
     });
 });
+builder.Services.AddMassTransitObservable();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
-
 app.MapDefaultEndpoints();
+
+app.MapControllers();
 
 await app.RunAsync();

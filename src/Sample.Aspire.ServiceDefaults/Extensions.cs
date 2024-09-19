@@ -1,4 +1,6 @@
 using System.Globalization;
+using MassTransit.Logging;
+using MassTransit.Monitoring;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +12,7 @@ using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.OpenTelemetry;
 
 namespace Sample.Aspire.ServiceDefaults;
@@ -54,7 +57,7 @@ public static partial class Extensions
     private static IHostApplicationBuilder ConfigureConfigurations(this IHostApplicationBuilder builder)
     {
         var configurationFile = Path.GetFullPath(
-            Environment.GetEnvironmentVariable("OWO_CONFIGURATION_FILE") ?? "appsettings.yaml");
+            Environment.GetEnvironmentVariable("APP_CONFIGURATION_FILE") ?? "appsettings.yaml");
         var configurationFileDirectory = Path.GetDirectoryName(configurationFile)!;
         var configurationFileWithoutExt = Path.GetFileNameWithoutExtension(configurationFile);
 
@@ -89,6 +92,8 @@ public static partial class Extensions
                     .AddRuntimeInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
+
+                metrics.AddMeter(InstrumentationOptions.MeterName);
             })
             .WithTracing(tracing =>
             {
@@ -98,6 +103,7 @@ public static partial class Extensions
                 }
 
                 tracing.AddSource(otelSvcName);
+                tracing.AddSource(DiagnosticHeaders.DefaultListenerName);
 
                 tracing
                     .AddAspNetCoreInstrumentation()
@@ -128,6 +134,9 @@ public static partial class Extensions
                 .ReadFrom.Configuration(builder.Configuration)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
                 .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
                 .WriteTo.OpenTelemetry(options =>
                 {

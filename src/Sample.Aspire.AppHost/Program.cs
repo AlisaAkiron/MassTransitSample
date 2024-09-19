@@ -27,7 +27,7 @@ var postgresql = builder
             pg.WithPgAdmin(pgadmin => pgadmin.WithImageTag("latest"));
         }
 
-        pg.AddDatabase("postgresql-db");
+        pg.AddDatabase("postgresql-db", "MassTransitSample");
         return pg;
     }, "PostgreSQL");
 
@@ -39,6 +39,9 @@ var rabbitMq = builder
         .WithDataVolume("masstransit-sample-mq")
         .WithManagementPlugin(), "RabbitMQ");
 
+var migrator = builder.AddProject<Sample_Migrator>("migrator")
+    .WithReference(postgresql, "PostgreSQL");
+
 builder.AddProject<Sample_Web>("web")
     .WithReference(postgresql, "PostgreSQL")
     .WithReference(rabbitMq, "RabbitMQ");
@@ -46,8 +49,5 @@ builder.AddProject<Sample_Web>("web")
 builder.AddProject<Sample_Worker>("worker")
     .WithReference(postgresql, "PostgreSQL")
     .WithReference(rabbitMq, "RabbitMQ");
-
-builder.AddProject<Sample_Migrator>("migrator")
-    .WithReference(postgresql, "PostgreSQL");
 
 await builder.Build().RunAsync();

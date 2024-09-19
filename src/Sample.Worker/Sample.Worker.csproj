@@ -4,6 +4,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sample.Aspire.ServiceDefaults\Sample.Aspire.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Sample.Contract\Sample.Contract.csproj" />
     <ProjectReference Include="..\Sample.Database\Sample.Database.csproj" />
   </ItemGroup>
 </Project>

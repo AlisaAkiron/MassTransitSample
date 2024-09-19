@@ -511,7 +511,7 @@ $RECYCLE.BIN/
 
 # Development configuration
 *.development.json
-
+*.development.yaml
 
 ### SpecFlow ###
 # Feature Files

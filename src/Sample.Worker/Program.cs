@@ -26,6 +26,7 @@ builder.Services.AddMassTransit(options =>
         o.UsePostgres();
     });
 });
+builder.Services.AddMassTransitObservable();
 
 var host = builder.Build();
 

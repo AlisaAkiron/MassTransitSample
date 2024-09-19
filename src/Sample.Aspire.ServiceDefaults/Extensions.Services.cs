@@ -1,4 +1,5 @@
 using MassTransit;
+using MassTransit.Observables;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,5 +17,15 @@ public static partial class Extensions
 
             configure?.Invoke(c, cfg);
         });
+    }
+
+    public static void AddMassTransitObservable(this IServiceCollection services)
+    {
+        services.AddBusObserver<BusObservable>();
+        services.AddReceiveEndpointObserver<ReceiveEndpointObservable>();
+        services.AddReceiveObserver<ReceiveObservable>();
+        services.AddConsumeObserver<ConsumeObservable>();
+        services.AddSendObserver<SendObservable>();
+        services.AddPublishObserver<PublishObservable>();
     }
 }
