@@ -9,6 +9,7 @@
     <PackageVersion Include="MassTransit" Version="8.2.5" />
     <PackageVersion Include="MassTransit.EntityFrameworkCore" Version="8.2.5" />
     <PackageVersion Include="MassTransit.RabbitMQ" Version="8.2.5" />
+    <PackageVersion Include="MassTransit.StateMachineVisualizer" Version="8.2.5" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
