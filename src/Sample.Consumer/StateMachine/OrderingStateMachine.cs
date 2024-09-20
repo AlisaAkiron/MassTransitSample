@@ -21,6 +21,7 @@ public class OrderingStateMachine : MassTransitStateMachine<OrderingData>
         Event(() => OrderCreated, x => x.CorrelateById(context => context.Message.OrderId));
         Event(() => PaymentCreated, x => x.CorrelateById(context => context.Message.OrderId));
         Event(() => PaymentDone, x => x.CorrelateById(context => context.Message.OrderId));
+        Event(() => PaymentFailed, x => x.CorrelateById(context => context.Message.OrderId));
 
         Initially(
             When(OrderCreated)

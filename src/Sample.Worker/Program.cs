@@ -17,6 +17,7 @@ builder.Services.AddMassTransit(options =>
 
     options.AddConsumers(assembly);
     options.AddActivities(assembly);
+    options.AddSagas(assembly);
 
     options.AddSagaStateMachine<OrderingStateMachine, OrderingData>()
         .EntityFrameworkRepository(r =>
@@ -36,6 +37,7 @@ builder.Services.AddMassTransit(options =>
     });
 });
 builder.Services.AddMassTransitObservable();
+builder.Services.AddStateObserver<OrderingData, OrderingStateMachine.StateObservable>();
 
 var host = builder.Build();
 
