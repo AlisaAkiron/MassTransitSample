@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using OpenTelemetry.Trace;
 using Sample.Database;
+using Sample.Database.Entities;
 
 namespace Sample.Migrator;
 
@@ -85,8 +86,59 @@ public class Worker : BackgroundService
         });
     }
 
-    private static Task SeedDevelopmentDataAsync(SampleDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task SeedDevelopmentDataAsync(SampleDbContext dbContext, CancellationToken cancellationToken)
     {
-        return Task.CompletedTask;
+        var seedCustomer = await dbContext.Customers.AnyAsync(cancellationToken) is false;
+        var seedProduct = await dbContext.Products.AnyAsync(cancellationToken) is false;
+
+        if (seedCustomer)
+        {
+            await dbContext.Customers.AddRangeAsync([
+                new Customer
+                {
+                    Id = 1,
+                    Name = "John Doe",
+                    Balance = 100.00m
+                },
+                new Customer
+                {
+                    Id = 2,
+                    Name = "Jane Doe",
+                    Balance = 2000.00m
+                },
+                new Customer
+                {
+                    Id = 3,
+                    Name = "Alice",
+                    Balance = 30000.00m
+                }
+            ], cancellationToken);
+        }
+
+        if (seedProduct)
+        {
+            await dbContext.Products.AddRangeAsync([
+                new Product
+                {
+                    Id = 1,
+                    Name = "Product 1",
+                    Price = 100.00m
+                },
+                new Product
+                {
+                    Id = 2,
+                    Name = "Product 2",
+                    Price = 200.00m
+                },
+                new Product
+                {
+                    Id = 3,
+                    Name = "Product 3",
+                    Price = 300.00m
+                }
+            ], cancellationToken);
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

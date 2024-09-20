@@ -39,7 +39,7 @@ var rabbitMq = builder
         .WithDataVolume("masstransit-sample-mq")
         .WithManagementPlugin(), "RabbitMQ");
 
-var migrator = builder.AddProject<Sample_Migrator>("migrator")
+builder.AddProject<Sample_Migrator>("migrator")
     .WithReference(postgresql, "PostgreSQL");
 
 builder.AddProject<Sample_Web>("web")
