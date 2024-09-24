@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="TUnit" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Sample.Common\Sample.Common.csproj" />
+      <ProjectReference Include="..\Sample.Consumer\Sample.Consumer.csproj" />
+      <ProjectReference Include="..\Sample.Database\Sample.Database.csproj" />
+    </ItemGroup>
+
+</Project>
