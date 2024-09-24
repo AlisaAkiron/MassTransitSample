@@ -18,13 +18,7 @@ builder.Services.AddMassTransit(options =>
     options.AddConsumers(assembly);
     options.AddActivities(assembly);
     options.AddSagas(assembly);
-
-    options.AddSagaStateMachine<OrderingStateMachine, OrderingData>()
-        .EntityFrameworkRepository(r =>
-        {
-            r.ExistingDbContext<SampleDbContext>();
-            r.UsePostgres();
-        });
+    options.AddSagaStateMachines(assembly);
 
     options.UseAspireRabbitMq((c, cfg) =>
     {
@@ -35,8 +29,16 @@ builder.Services.AddMassTransit(options =>
     {
         o.UsePostgres();
     });
+
+    options.SetEntityFrameworkSagaRepositoryProvider(o =>
+    {
+        o.ExistingDbContext<SampleDbContext>();
+        o.UsePostgres();
+    });
 });
 builder.Services.AddMassTransitObservable();
+
+builder.Services.AddEventObserver<OrderingData, OrderingStateMachine.EventObservable>();
 builder.Services.AddStateObserver<OrderingData, OrderingStateMachine.StateObservable>();
 
 var host = builder.Build();

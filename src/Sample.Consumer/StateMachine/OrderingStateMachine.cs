@@ -47,7 +47,6 @@ public class OrderingStateMachine : MassTransitStateMachine<OrderingData>
             When(PaymentDone)
                 .Finalize(),
             When(PaymentFailed)
-                .Then(_ => throw new InvalidOperationException("Payment failed"))
                 .Finalize()
             );
     }
