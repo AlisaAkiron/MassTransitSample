@@ -12,6 +12,19 @@ public partial class OrderController : ControllerBase
 {
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly SampleDbContext _sampleDbContext;
+    private readonly ILogger<OrderController> _logger;
+
+    [HttpGet("ping")]
+    public async Task<IActionResult> PingAsync()
+    {
+        var id = Guid.NewGuid();
+        await _publishEndpoint.Publish(new PingOne(id));
+
+        _logger.LogInformation("PingOne: {Id}", id);
+        await _sampleDbContext.SaveChangesAsync();
+
+        return Ok(id);
+    }
 
     [HttpPost("order")]
     public async Task<IActionResult> MakeOrderAsync([FromBody] MakeOrderRequest request)

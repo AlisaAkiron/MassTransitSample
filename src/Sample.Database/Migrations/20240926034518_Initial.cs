@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Sample.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialize : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -113,6 +113,19 @@ namespace Sample.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PingPongs",
+                columns: table => new
+                {
+                    CorrelationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CurrentState = table.Column<string>(type: "text", nullable: false),
+                    StarterId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PingPongs", x => x.CorrelationId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -132,8 +145,7 @@ namespace Sample.Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CustomerId1 = table.Column<int>(type: "integer", nullable: false),
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Paid = table.Column<bool>(type: "boolean", nullable: false),
                     Remarks = table.Column<string>(type: "text", nullable: false)
@@ -142,8 +154,8 @@ namespace Sample.Database.Migrations
                 {
                     table.PrimaryKey("PK_Payments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_Customers_CustomerId1",
-                        column: x => x.CustomerId1,
+                        name: "FK_Payments_Customers_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -210,9 +222,9 @@ namespace Sample.Database.Migrations
                 column: "Created");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_CustomerId1",
+                name: "IX_Payments_CustomerId",
                 table: "Payments",
-                column: "CustomerId1");
+                column: "CustomerId");
         }
 
         /// <inheritdoc />
@@ -235,6 +247,9 @@ namespace Sample.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "PingPongs");
 
             migrationBuilder.DropTable(
                 name: "Products");

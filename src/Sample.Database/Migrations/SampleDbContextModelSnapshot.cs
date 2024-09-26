@@ -216,6 +216,24 @@ namespace Sample.Database.Migrations
                     b.ToTable("OrderingData");
                 });
 
+            modelBuilder.Entity("Sample.Common.StateMachine.PingPong", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("StarterId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("CorrelationId");
+
+                    b.ToTable("PingPongs");
+                });
+
             modelBuilder.Entity("Sample.Database.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -277,10 +295,7 @@ namespace Sample.Database.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("CustomerId1")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("OrderId")
@@ -295,7 +310,7 @@ namespace Sample.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Payments");
                 });
@@ -335,7 +350,7 @@ namespace Sample.Database.Migrations
                 {
                     b.HasOne("Sample.Database.Entities.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId1")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -13,6 +13,7 @@ public class SampleDbContext : DbContext
     public DbSet<Payment> Payments => Set<Payment>();
 
     public DbSet<OrderingData> OrderingData => Set<OrderingData>();
+    public DbSet<PingPong> PingPongs => Set<PingPong>();
 
     public SampleDbContext(DbContextOptions<SampleDbContext> options) : base(options)
     {
@@ -27,5 +28,6 @@ public class SampleDbContext : DbContext
         modelBuilder.AddOutboxStateEntity();
 
         modelBuilder.Entity<OrderingData>().HasKey(x => x.CorrelationId);
+        modelBuilder.Entity<PingPong>().HasKey(x => x.CorrelationId);
     }
 }

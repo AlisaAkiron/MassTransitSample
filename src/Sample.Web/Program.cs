@@ -17,8 +17,19 @@ builder.Services.AddMassTransit(options =>
 
     options.AddEntityFrameworkOutbox<SampleDbContext>(o =>
     {
-        o.UsePostgres();
         o.UseBusOutbox();
+        o.UsePostgres();
+    });
+
+    options.SetEntityFrameworkSagaRepositoryProvider(o =>
+    {
+        o.UsePostgres();
+        o.ExistingDbContext<SampleDbContext>();
+    });
+
+    options.AddConfigureEndpointsCallback((c, _, ctx) =>
+    {
+        ctx.UseEntityFrameworkOutbox<SampleDbContext>(c);
     });
 });
 builder.Services.AddMassTransitObservable();
